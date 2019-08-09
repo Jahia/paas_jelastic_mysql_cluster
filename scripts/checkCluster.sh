@@ -31,11 +31,6 @@ slave_sql_status () {
         echo -e "Slave SQL Status: $value"
 }
 
-slave_io_status () {
-        value=$(mysqlslave "SHOW SLAVE STATUS \G;" | grep "Slave_IO_Running" | awk '{ print $2 }')
-        echo -e "Slave IO Status: $value"
-}
-
 galera_cluster_status () {
 	value=$(mysqlgalera "SHOW STATUS LIKE 'wsrep_cluster_status';")
 	echo -e "Galera Cluster Status: $value"
