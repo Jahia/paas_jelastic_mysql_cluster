@@ -37,7 +37,7 @@ galera_thread_count () {
 
 galera_ready () {
 	value=$(mysqlconnect "SHOW STATUS LIKE 'wsrep_ready';")
-	echo -e "OK! Galera provider is $value"
+	echo -e "Galera provider is $value"
 }
 
 galera_cluster_synced () {
