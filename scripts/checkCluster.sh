@@ -9,40 +9,52 @@ check_connection() {
 	mysql -h "${HOST}" -u "${USER}" --password="${PASSWORD}" -e "quit" || \
 		echo -e "Can't connect to mysql server $HOST"
 }
-mysqlconnect () {
+mysqlgalera () {
 	local cmd
 	cmd="${1}"
 	mysql -h "${HOST}" -u "${USER}" --password="${PASSWORD}" -s -B -N -e "${cmd}" | sed -e 's/[[:space:]]\{1,\}/,/g' | cut -d"," -f2
 }
 
+mysqlslave () {
+        local cmd
+        cmd="${1}"
+        mysql -h "${HOST}" -u "${USER}" --password="${PASSWORD}" -s -B -N -e "${cmd}"
+}
+
+
+slave_io_status () {
+        value=$(mysqlslave "SHOW SLAVE STATUS \G;" | grep "Slave_IO_Running" | awk '{ print $2 }')
+        echo -e "Slave IO Status: $value"
+}
+
 galera_cluster_status () {
-	value=$(mysqlconnect "SHOW STATUS LIKE 'wsrep_cluster_status';")
+	value=$(mysqlgalera "SHOW STATUS LIKE 'wsrep_cluster_status';")
 	echo -e "Galera Cluster Status: $value"
 }
 
 galera_connected () {
-	value=$(mysqlconnect "SHOW STATUS LIKE 'wsrep_connected';")
+	value=$(mysqlgalera "SHOW STATUS LIKE 'wsrep_connected';")
 	echo -e "Galera Cconnected Status: $value"
 }
 
 galera_cluster_size () {
-	value=$(mysqlconnect "SHOW STATUS LIKE 'wsrep_cluster_size';")
+	value=$(mysqlgalera "SHOW STATUS LIKE 'wsrep_cluster_size';")
 	echo -e "Number of nodes connected: $value"
 }
 
 galera_thread_count () {
-	value=$(mysqlconnect "SHOW STATUS LIKE 'wsrep_thread_count';")
+	value=$(mysqlgalera "SHOW STATUS LIKE 'wsrep_thread_count';")
 	echo -e  "Galera thread count: $value"
 }
 
 galera_ready () {
-	value=$(mysqlconnect "SHOW STATUS LIKE 'wsrep_ready';")
+	value=$(mysqlgalera "SHOW STATUS LIKE 'wsrep_ready';")
 	echo -e "Galera provider is $value"
 }
 
 galera_cluster_synced () {
-	node_uuid=$(mysqlconnect "SHOW STATUS LIKE 'wsrep_local_state_uuid';")
-	cluster_uuid=$(mysqlconnect "SHOW STATUS LIKE 'wsrep_cluster_state_uuid';")
+	node_uuid=$(mysqlgalera "SHOW STATUS LIKE 'wsrep_local_state_uuid';")
+	cluster_uuid=$(mysqlgalera "SHOW STATUS LIKE 'wsrep_cluster_state_uuid';")
 	if [ "${node_uuid}" = "" ] && [ "${cluster_uuid}" = "" ];then
 		echo -e "CRITICAL! Could not get UUID from node nor cluster"
 	fi
