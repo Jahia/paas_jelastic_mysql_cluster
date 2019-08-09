@@ -3,7 +3,7 @@
 HOST=$1
 USER=$2
 PASSWORD=$3
-COMMAND=""
+TYPE=$4
 
 check_connection() {
 	mysql -h "${HOST}" -u "${USER}" --password="${PASSWORD}" -e "quit" || \
@@ -21,6 +21,15 @@ mysqlslave () {
         mysql -h "${HOST}" -u "${USER}" --password="${PASSWORD}" -s -B -N -e "${cmd}"
 }
 
+slave_io_status () {
+        value=$(mysqlslave "SHOW SLAVE STATUS \G;" | grep "Slave_IO_Running" | awk '{ print $2 }')
+        echo -e "Slave IO Status: $value"
+}
+
+slave_sql_status () {
+        value=$(mysqlslave "SHOW SLAVE STATUS \G;" | grep "Slave_SQL_Running" | awk '{ print $2 }')
+        echo -e "Slave SQL Status: $value"
+}
 
 slave_io_status () {
         value=$(mysqlslave "SHOW SLAVE STATUS \G;" | grep "Slave_IO_Running" | awk '{ print $2 }')
@@ -65,11 +74,18 @@ galera_cluster_synced () {
 	fi
 }
 
-galera_cluster_status
-galera_connected
-galera_cluster_size
-galera_thread_count
-galera_ready
-galera_cluster_synced
+if [ "${TYPE}" == "slave" ]; then
+	slave_io_status
+	slave_sql_status
+fi
+
+if [ "${TYPE}" == "galera" ]; then
+	galera_cluster_status
+	galera_connected
+	galera_cluster_size
+	galera_thread_count
+	galera_ready
+	galera_cluster_synced
+fi
 
 exit 0;
