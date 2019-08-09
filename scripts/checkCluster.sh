@@ -74,6 +74,10 @@ galera_cluster_synced () {
 	fi
 }
 
+if [ "${TYPE}" == "PROXY" ]; then
+	check_connection
+fi
+
 if [ "${TYPE}" == "slave" ]; then
 	slave_io_status
 	slave_sql_status
@@ -87,5 +91,13 @@ if [ "${TYPE}" == "galera" ]; then
 	galera_ready
 	galera_cluster_synced
 fi
+
+if [ "${TYPE}" == "single" ]; then
+	echo single
+fi
+if [ "${TYPE}" == "multi" ]; then
+	echo single
+fi
+
 
 exit 0;
