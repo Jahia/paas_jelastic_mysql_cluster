@@ -96,7 +96,22 @@ actions:
     - if (nodes.sqldb.length == 2):
         - install-jps:
             jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+        - install: 
+            jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+            settings:
+              db_user: "${settings.db_user}"
+              db_pass: "${settings.db_pass}"
+              scheme: "${settings.scheme}"
+              path: "${globals.baseUrl}"
+            
         - if ('${settings.is_proxysql}' == 'true'):    
+          - install: 
+              jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+              settings:
+                db_user: "${settings.db_user}"
+                db_pass: "${settings.db_pass}"
+                scheme: "PROXY"
+                path: "${globals.baseUrl}"
           - install-jps:
               jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
     
@@ -104,30 +119,92 @@ actions:
       - if (/mysql/.test("${nodes.sqldb.nodeType}")):
 
         - if ('${settings.scheme}'.toLowerCase() == 'master'):
+          - install: 
+              jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+              settings:
+                db_user: "${settings.db_user}"
+                db_pass: "${settings.db_pass}"
+                scheme: "${settings.scheme}"
+                path: "${globals.baseUrl}"
           - install-jps:
               jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
           - if ('${settings.is_proxysql}' == 'true'):    
+            - install: 
+                jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+                settings:
+                  db_user: "${settings.db_user}"
+                  db_pass: "${settings.db_pass}"
+                  scheme: "PROXY"
+                  path: "${globals.baseUrl}"
             - install-jps:
                 jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
         
         - if ('${settings.scheme}'.toLowerCase() == 'slave'):
           - install-jps:
               jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+          - install: 
+              jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+              settings:
+                db_user: "${settings.db_user}"
+                db_pass: "${settings.db_pass}"
+                scheme: "${settings.scheme}"
+                path: "${globals.baseUrl}"
+
           - if ('${settings.is_proxysql}' == 'true'):    
+            - install: 
+                jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+                settings:
+                  db_user: "${settings.db_user}"
+                  db_pass: "${settings.db_pass}"
+                  scheme: "PROXY"
+                  path: "${globals.baseUrl}"
+
             - install-jps:
                 jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
 
         - if ('${settings.scheme}'.toLowerCase() == 'single'):
           - install-jps:
               jps: "${globals.scripts}/mgr-configuration.jps?_r=${fn.random}"
+          - install: 
+              jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+              settings:
+                db_user: "${settings.db_user}"
+                db_pass: "${settings.db_pass}"
+                scheme: "${settings.scheme}"
+                path: "${globals.baseUrl}"
+
           - if ('${settings.is_proxysql}' == 'true'):    
+            - install: 
+                jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+                settings:
+                  db_user: "${settings.db_user}"
+                  db_pass: "${settings.db_pass}"
+                  scheme: "PROXY"
+                  path: "${globals.baseUrl}"
+
             - install-jps:
                 jps: "${globals.scripts}/proxy-mgr-configuration.jps?_r=${fn.random}"
 
         - if ('${settings.scheme}'.toLowerCase() == 'multi'):
           - install-jps:
               jps: "${globals.scripts}/mgr-configuration.jps?_r=${fn.random}"
+          - install: 
+              jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+              settings:
+                db_user: "${settings.db_user}"
+                db_pass: "${settings.db_pass}"
+                scheme: "${settings.scheme}"
+                path: "${globals.baseUrl}"
+
           - if ('${settings.is_proxysql}' == 'true'):    
+            - install: 
+                jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+                settings:
+                  db_user: "${settings.db_user}"
+                  db_pass: "${settings.db_pass}"
+                  scheme: "PROXY"
+                  path: "${globals.baseUrl}"
+
             - install-jps:
                 jps: "${globals.scripts}/proxy-mgr-configuration.jps?_r=${fn.random}"
 
@@ -135,14 +212,45 @@ actions:
         - if ('${settings.scheme}'.toLowerCase() == 'galera'):  
           - install-jps:
               jps: "${globals.scripts}/galera-configuration.jps?_r=${fn.random}"
+          - install: 
+              jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+              settings:
+                db_user: "${settings.db_user}"
+                db_pass: "${settings.db_pass}"
+                scheme: "${settings.scheme}"
+                path: "${globals.baseUrl}"
+          
           - if ('${settings.is_proxysql}' == 'true'):    
+            - install: 
+                jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+                settings:
+                  db_user: "${settings.db_user}"
+                  db_pass: "${settings.db_pass}"
+                  scheme: "PROXY"
+                  path: "${globals.baseUrl}"
+
             - install-jps:
                 jps: "${globals.scripts}/proxy-galera-configuration.jps?_r=${fn.random}"
       
         - if ('${settings.scheme}'.toLowerCase() != 'galera'):  
           - install-jps:
               jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+          - install: 
+              jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+              settings:
+                db_user: "${settings.db_user}"
+                db_pass: "${settings.db_pass}"
+                scheme: "${settings.scheme}"
+                path: "${globals.baseUrl}"
           - if ('${settings.is_proxysql}' == 'true'):    
+            - install: 
+                jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+                settings:
+                  db_user: "${settings.db_user}"
+                  db_pass: "${settings.db_pass}"
+                  scheme: "PROXY"
+                  path: "${globals.baseUrl}"
+
             - install-jps:
                 jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
   
