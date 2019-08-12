@@ -1,8 +1,6 @@
 jpsType: update
 name: Check Database Cluster 
 description: Check Database Cluster
-nodeGroupAlias: 
-  "${targetNodes.nodeGroup}": sqldb
 
 globals:
   PATH: "${settings.path}"
