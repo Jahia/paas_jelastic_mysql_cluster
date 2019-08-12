@@ -69,6 +69,22 @@ galera_cluster_synced () {
 	fi
 }
 
+multi_cluster_status () {
+	value=$(mysqlgalera "SELECT COUNT(*) FROM performance_schema.replication_group_members;")
+	echo -e "MULTI MGR: Number of nodes connected: $value"
+	value=$(mysqlgalera "SELECT COUNT(*) FROM performance_schema.replication_group_members where member_role='PRIMARY';")
+        echo -e "MULTI MGR: Number of PRIMARY nodes connected: $value"
+}
+
+single_cluster_status () {
+        value=$(mysqlgalera "SELECT COUNT(*) FROM performance_schema.replication_group_members;")
+        echo -e "SINGLE MGR: Number of nodes connected: $value"
+        value=$(mysqlgalera "SELECT COUNT(*) FROM performance_schema.replication_group_members where member_role='PRIMARY';")
+        echo -e "SINGLE MGR: Number of PRIMARY nodes connected: $value"
+        value=$(mysqlgalera "SELECT COUNT(*) FROM performance_schema.replication_group_members where member_role='SECONDARY' ;")
+        echo -e "SINGLE MGR: Number of SECONDARY nodes connected: $value"
+}
+
 if [ "${TYPE}" == "PROXY" ]; then
 	check_connection
 fi
@@ -91,8 +107,7 @@ if [ "${TYPE}" == "single" ]; then
 	echo single
 fi
 if [ "${TYPE}" == "multi" ]; then
-	echo single
+	multi_cluster_status
 fi
-
 
 exit 0;
