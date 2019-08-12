@@ -26,6 +26,6 @@ onInstall:
     - log: -------- PROXYSQL - BEGIN CHECK STATUS FOR ${globals.SCHEME} TOPOLOGY
     - cmd[${nodes.proxysql.master.id}]: wget ${globals.PATH}/scripts/checkCluster.sh -O ~/checkCluster.sh
     - forEach(i:nodes.sqldb):
-        cmd[${nodes.proxysql.master.id}]: bash ~/checkCluster.sh ${@i.id} ${globals.DB_USER} ${globals.DB_PASS} PROXY
+        cmd[${nodes.proxysql.master.id}]: bash ~/checkCluster.sh node${@i.id} ${globals.DB_USER} ${globals.DB_PASS} PROXY
     - log: -------- PROXYSQL - END CHECK STATUS FOR ${globals.SCHEME} TOPOLOGY
    
