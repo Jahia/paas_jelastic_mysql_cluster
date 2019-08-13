@@ -9,7 +9,6 @@ globals:
   SCHEME: "${settings.scheme}"
   
 onInstall:
-  - log: -------- SQLDB - BEGIN CHECK STATUS FOR ${globals.SCHEME} TOPOLOGY
   - cmd[sqldb]: wget ${globals.PATH}/scripts/checkCluster.sh -O ~/checkCluster.sh
 
   - if ('${globals.SCHEME}' == 'slave'):
@@ -20,12 +19,8 @@ onInstall:
   - if ('${globals.SCHEME}' != 'slave'):
       cmd[${nodes.sqldb.master.id}]: bash ~/checkCluster.sh localhost ${globals.DB_USER} ${globals.DB_PASS} ${globals.SCHEME}
 
-  - log: -------- SQLDB - END CHECK STATUS FOR ${globals.SCHEME} TOPOLOGY
-
   - if (nodes.proxysql):
-    - log: -------- PROXYSQL - BEGIN CHECK STATUS FOR ${globals.SCHEME} TOPOLOGY
     - cmd[${nodes.proxysql.master.id}]: wget ${globals.PATH}/scripts/checkCluster.sh -O ~/checkCluster.sh
     - forEach(i:nodes.sqldb):
         cmd[${nodes.proxysql.master.id}]: bash ~/checkCluster.sh node${@i.id} ${globals.DB_USER} ${globals.DB_PASS} PROXY
-    - log: -------- PROXYSQL - END CHECK STATUS FOR ${globals.SCHEME} TOPOLOGY
    
