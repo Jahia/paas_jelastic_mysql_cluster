@@ -5,6 +5,8 @@ USER=$2
 PASSWORD=$3
 TYPE=$4
 
+echo "-------- SQLDB - BEGIN CHECK STATUS FOR $TYPE TOPOLOGY"
+
 check_connection() {
 	mysql -h "${HOST}" -u "${USER}" --password="${PASSWORD}" -e "quit" || \
 		echo -e "Can't connect to mysql server $HOST"
@@ -86,7 +88,9 @@ single_cluster_status () {
 }
 
 if [ "${TYPE}" == "PROXY" ]; then
+	echo "-------- PROXYSQL - BEGIN CHECK STATUS FOR $TYPE TOPOLOGY"
 	check_connection
+	echo "-------- PROXYSQL - END CHECK STATUS FOR $TYPE TOPOLOGY"
 fi
 
 if [ "${TYPE}" == "slave" ]; then
@@ -109,5 +113,7 @@ fi
 if [ "${TYPE}" == "multi" ]; then
 	multi_cluster_status
 fi
+
+echo "-------- SQLDB - END CHECK STATUS FOR $TYPE TOPOLOGY"
 
 exit 0;
