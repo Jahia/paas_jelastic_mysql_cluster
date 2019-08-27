@@ -5,11 +5,14 @@ USER=$2
 PASSWORD=$3
 TYPE=$4
 
-echo "-------- SQLDB - BEGIN CHECK STATUS FOR $TYPE TOPOLOGY"
-
 check_connection() {
-	mysql -h "${HOST}" -u "${USER}" --password="${PASSWORD}" -e "quit" || \
-		echo -e "Can't connect to mysql server $HOST"
+#	mysql -h "${HOST}" -u "${USER}" --password="${PASSWORD}" -e "quit" || \
+	mysql -h "${HOST}" -u "${USER}" --password="${PASSWORD}" -e "quit" 2>/dev/null
+	if [ $? -eq 0 ]; then
+		echo -e "SUCCESS: Connection to mysql server $HOST is success"
+	else
+		echo -e "ERROR: Can't connect to mysql server $HOST"
+	fi
 }
 mysqlgalera () {
 	local cmd
@@ -113,7 +116,5 @@ fi
 if [ "${TYPE}" == "multi" ]; then
 	multi_cluster_status
 fi
-
-echo "-------- SQLDB - END CHECK STATUS FOR $TYPE TOPOLOGY"
 
 exit 0;
