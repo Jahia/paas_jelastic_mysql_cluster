@@ -124,7 +124,9 @@ actions:
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "LOAD MYSQL SERVERS TO RUNTIME; SAVE MYSQL SERVERS TO DISK;"
  
   addHostToOrchestrator:
-    cmd [proxy]: /usr/local/orchestrator/orchestrator -c discover -i node${this.id} cli &>> /var/log/run.log
+    cmd [proxy]: |-
+      systemctl is-active orchestrator
+      /usr/local/orchestrator/orchestrator -c discover -i node${this.id} cli &>> /var/log/run.log
     user: root
 
   addSlave:
