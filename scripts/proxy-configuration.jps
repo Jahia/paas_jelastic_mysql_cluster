@@ -80,13 +80,21 @@ onInstall:
       - if ('${nodes.sqldb.master.id}' == '${nodes.sqldb.first.id}'):
         - addMaster:
             id: "${nodes.sqldb.master.id}"
+        - addHostToOrchestrator:
+            id: "${nodes.sqldb.master.id}"
         - addMaster:
+            id: "${nodes.sqldb[1].id}"
+        - addHostToOrchestrator:
             id: "${nodes.sqldb[1].id}"
 
       - if ('${nodes.sqldb.master.id}' != '${nodes.sqldb.first.id}'):
         - addMaster:
             id: "${nodes.sqldb.master.id}"
+        - addHostToOrchestrator:
+            id: "${nodes.sqldb.master.id}"
         - addMaster:
+            id: "${nodes.sqldb.first.id}"
+        - addHostToOrchestrator:
             id: "${nodes.sqldb.first.id}"
 
       - forEach(k:nodes.sqldb):
