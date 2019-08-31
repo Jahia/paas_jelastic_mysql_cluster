@@ -125,6 +125,7 @@ actions:
  
   addHostToOrchestrator:
     cmd [proxy]: |-
+      host node${this.id}
       systemctl is-active orchestrator;
       /usr/local/orchestrator/orchestrator -c discover -i node${this.id} cli;
     user: root
