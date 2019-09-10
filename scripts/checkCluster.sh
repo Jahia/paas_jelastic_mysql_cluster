@@ -23,7 +23,7 @@ mysqlgalera () {
 mysqlslave () {
         local cmd
         cmd="${1}"
-        mysql -h "${HOST}" -u "${USER}" --password="${PASSWORD}" -s -B -N -e "${cmd}"
+        mysql -h "${HOST}" -u "${USER}" --password="${PASSWORD}" -e "${cmd}"
 }
 
 slave_io_status () {
