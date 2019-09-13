@@ -111,7 +111,7 @@ if [ "${TYPE}" == "galera" ]; then
 fi
 
 if [ "${TYPE}" == "single" ]; then
-	echo single
+    single_cluster_status
 fi
 if [ "${TYPE}" == "multi" ]; then
 	multi_cluster_status
