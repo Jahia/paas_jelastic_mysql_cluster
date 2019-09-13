@@ -4,7 +4,7 @@
     "name": "MySQL Auto-Cluster",
     "description": "[@Deprecated: see /scripts/ms-mm-configuration.jps] MySQL Auto Clustering: 1 x Master + N x Slave",
     "globals": {
-        "PATH": "https://raw.githubusercontent.com/jahia/paas_jelastic_mysql_cluster/master",
+        "PATH": "https://raw.githubusercontent.com/jahia/paas_jelastic_mysql_cluster/PAAS-318-mariabd-cluster",
         "DB_USER": "${settings.db_user}",
         "DB_PASS": "${settings.db_pass}",
         "REPLICATION_USER": "repl-${fn.random}",
@@ -97,7 +97,7 @@
             "user": "root"
         },
         "setupMaster": [{
-            "cmd[${this.id}]": "wget ${globals.PATH}/configs/master.cnf -O /etc/mysql/conf.d/master.cnf &>> /var/log/run.log",
+            "cmd[${this.id}]": "wget ${globals.PATH}/configs/PAAS-318-mariabd-cluster.cnf -O /etc/mysql/conf.d/PAAS-318-mariabd-cluster.cnf &>> /var/log/run.log",
             "setNodeDisplayName[${this.id}]": "Master",
             "user": "root"
         }, {
