@@ -117,12 +117,8 @@ actions:
       host node${this.id}
       systemctl is-active orchestrator;
       /usr/local/orchestrator/orchestrator -c discover -i node${this.id} cli;
+      /usr/local/orchestrator/orchestrator -c set-read-only -i node${this.id}
     user: root
-
-  #setSlaveInReadOnly:
-  #  cmd [proxy]: |-
-  #    /usr/local/orchestrator/orchestrator -c set-read-only -i node${this.id}
-  #  user: root
 
   addSlave:
     cmd[proxy]: |-

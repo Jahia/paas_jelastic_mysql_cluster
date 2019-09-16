@@ -33,6 +33,8 @@ onAfterScaleOut[sqldb]:
 onInstall:
   - if ('${globals.SCHEME}'.toLowerCase() == 'master'):
     - log: "--> Setup Master Node"
+    - cmd[sqldb]: |-
+        wget ${globals.PATH}/configs/my.cnf -O /etc/my.cnf
     - if ('${nodes.sqldb.master.id}' == '${nodes.sqldb.first.id}'):
           - cmd[${nodes.sqldb.master.id}]: |-
               wget ${globals.PATH}/configs/increment.cnf -O /etc/mysql/conf.d/increment.cnf
@@ -73,14 +75,14 @@ onInstall:
         - setupReplication:
             id: "${nodes.sqldb.first.id}"
             masterId: "${nodes.sqldb.master.id}"
-          
+
     - forEach(n:nodes.sqldb):
          - if ('${nodes.sqldb.master.id}' == '${nodes.sqldb.first.id}' && '${@n.id}' != '${nodes.sqldb.master.id}' && '${@n.id}' != '${nodes.sqldb[1].id}'):
               addDistSlave:
-                id: "${@n.id}" 
+                id: "${@n.id}"
          - if ('${nodes.sqldb.master.id}' != '${nodes.sqldb.first.id}' && '${@n.id}' != '${nodes.sqldb.master.id}' && '${@n.id}' != '${nodes.sqldb.first.id}'):
               addDistSlave:
-                id: "${@n.id}" 
+                id: "${@n.id}"
 
   - if ('${globals.SCHEME}'.toLowerCase() != 'master'):
     - log: "--> Setup Slave Node"
@@ -121,6 +123,7 @@ actions:
     - cmd[${this.id}]: |-
         wget ${globals.PATH}/configs/master.cnf -O /etc/mysql/conf.d/master.cnf &>> /var/log/run.log
         sed -i "s/server-id.*/server-id = ${this.id}/" /etc/mysql/conf.d/master.cnf
+        sed -i "s/report-host.*/report-host = ${this.id}/" /etc/mysql/conf.d/master.cnf
     - setupUser:
         id: "${this.id}"
     - setNodeDisplayName[${this.id}]: Master
@@ -130,7 +133,7 @@ actions:
         wget ${globals.PATH}/configs/slave.cnf -O /etc/mysql/conf.d/slave.cnf &>> /var/log/run.log
         sed -i "s/server-id.*/server-id = ${this.id}/" /etc/mysql/conf.d/slave.cnf
     - setNodeDisplayName[${this.id}]: Slave
-  
+
   addSlave:
     - addCustomConfig:
         id: "${this.id}"

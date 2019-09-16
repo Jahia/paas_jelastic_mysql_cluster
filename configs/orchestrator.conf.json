@@ -100,7 +100,6 @@
     "PreFailoverProcesses": ["echo 'Will recover from {failureType} on {failureCluster}' >> /tmp/recovery.log"],
     "PostFailoverProcesses": ["echo '(for all types) Recovered from {failureType} on {failureCluster}. Failed: {failedHost}:{failedPort}; Successor: {successorHost}:{successorPort}' >> /tmp/recovery.log"],
     "PostUnsuccessfulFailoverProcesses": [],
-    "PostMasterFailoverProcesses": ["echo 'Recovered from {failureType} on {failureCluster}. Failed: {failedHost}:{failedPort}; Promoted: {successorHost}:{successorPort}' >> /tmp/recovery.log"],
     "PostIntermediateMasterFailoverProcesses": ["echo 'Recovered from {failureType} on {failureCluster}. Failed: {failedHost}:{failedPort}; Successor: {successorHost}:{successorPort}' >> /tmp/recovery.log"],
     "CoMasterRecoveryMustPromoteOtherCoMaster": true,
     "DetachLostSlavesAfterMasterFailover": true,
@@ -111,5 +110,13 @@
     "OSCIgnoreHostnameFilters": [],
     "GraphiteAddr": "",
     "GraphitePath": "",
-    "GraphiteConvertHostnameDotsToUnderscores": true
+    "GraphiteConvertHostnameDotsToUnderscores": true,
+    "ApplyMySQLPromotionAfterMasterFailover": true,
+    "PreGracefulTakeoverProcesses": [
+      "/root/prefailover.sh"
+    ],
+    "PostMasterFailoverProcesses": [
+      "/root/postfailover.sh"
+    ]
+
 }
