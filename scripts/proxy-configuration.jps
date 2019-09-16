@@ -2,7 +2,7 @@ jpsType: update
 name: Database Cluster
 description: ProxySQL Load Balancer Entry Point
 success: "../texts/proxy-entrypoint.md"
-nodeGroupAlias: 
+nodeGroupAlias:
   "${targetNodes.nodeGroup}": sqldb
 globals:
   PATH: "${settings.path}"
@@ -13,7 +13,7 @@ globals:
   MONITOR_PASS: "${fn.password(10)}"
   ORCH_PASS: "${fn.password(10)}"
   MAX_REPL_LAG: 20
-  
+
 
 onBeforeRemoveNode[proxy]:
   stopEvent
@@ -32,7 +32,7 @@ onBeforeScaleIn[sqldb]:
   forEach(event.response.nodes):
     removeSlave:
       id: "${@i.id}"
-      
+
 onAfterScaleIn[sqldb]:
   forEach(event.response.nodes):
     cmd[proxy]: mysql -h 127.0.0.1 -P3360 -uadmin -p${globals.ORCH_PASS} -e "DELETE FROM orchestrator.database_instance where hostname='node${@i.id}-${env.domain}';" &>> /var/log/run.log
@@ -57,9 +57,9 @@ onInstall:
   - log: ProxySQL configuration
   - cmd [proxy]: |-
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_replication_hostgroups VALUES (10,11,'Group setup');" &>> /var/log/run.log
-      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_users (username, password, active, default_hostgroup, max_connections) 
+      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_users (username, password, active, default_hostgroup, max_connections)
         VALUES ('${globals.DB_USER}', '${globals.DB_PASS}', 1, 10, 1000);" &>> /var/log/run.log
-      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_query_rules (active, match_pattern, destination_hostgroup, apply) VALUES (1, '^SELECT.*', 11, 1);" &>> /var/log/run.log
+      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_query_rules (active, match_pattern, destination_hostgroup, apply) VALUES (1, '^SELECT.*', 10, 1);" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_query_rules (active, match_pattern, destination_hostgroup, apply) VALUES (1, '^SELECT.*FOR UPDATE', 10, 1);" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "UPDATE global_variables SET variable_value='${globals.MONITOR_USER}' WHERE variable_name='mysql-monitor_username';" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "UPDATE global_variables SET variable_value='${globals.MONITOR_PASS}' WHERE variable_name='mysql-monitor_password';" &>> /var/log/run.log
@@ -77,29 +77,18 @@ onInstall:
       - setGlobals:
           MAX_REPL_LAG: 0
 
-      - if ('${nodes.sqldb.master.id}' == '${nodes.sqldb.first.id}'):
-        - addMaster:
-            id: "${nodes.sqldb.master.id}"
-        - addHostToOrchestrator:
-            id: "${nodes.sqldb.master.id}"
-        - addMaster:
-            id: "${nodes.sqldb[1].id}"
-        - addHostToOrchestrator:
-            id: "${nodes.sqldb[1].id}"
+      - addMaster:
+          id: "${nodes.sqldb.master.id}"
 
-      - if ('${nodes.sqldb.master.id}' != '${nodes.sqldb.first.id}'):
-        - addMaster:
-            id: "${nodes.sqldb.master.id}"
-        - addHostToOrchestrator:
-            id: "${nodes.sqldb.master.id}"
-        - addMaster:
-            id: "${nodes.sqldb.first.id}"
-        - addHostToOrchestrator:
-            id: "${nodes.sqldb.first.id}"
+      - addHostToOrchestrator:
+          id: "${nodes.sqldb.master.id}"
 
       - forEach(k:nodes.sqldb):
-          addSlave:
+        - addSlave:
             id: "${@k.id}"
+        #- if (!${@l.ismaster}):
+        #    setSlaveInReadOnly:
+        #      id: "${@k.id}"
 
   - if ('${globals.SCHEME}'.toLowerCase() != 'master'):
       forEach(l:nodes.sqldb):
@@ -122,7 +111,7 @@ actions:
     cmd [proxy]: |-
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_servers (hostgroup_id, hostname, port) VALUES (10, 'node${this.id}', 3306);" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "LOAD MYSQL SERVERS TO RUNTIME; SAVE MYSQL SERVERS TO DISK;" &>> /var/log/run.log
- 
+
   addHostToOrchestrator:
     cmd [proxy]: |-
       host node${this.id}
@@ -130,9 +119,14 @@ actions:
       /usr/local/orchestrator/orchestrator -c discover -i node${this.id} cli;
     user: root
 
+  #setSlaveInReadOnly:
+  #  cmd [proxy]: |-
+  #    /usr/local/orchestrator/orchestrator -c set-read-only -i node${this.id}
+  #  user: root
+
   addSlave:
     cmd[proxy]: |-
-      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_servers (hostgroup_id, hostname, port, max_replication_lag) 
+      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_servers (hostgroup_id, hostname, port, max_replication_lag)
         VALUES (11, 'node${this.id}', 3306, '${globals.MAX_REPL_LAG}');" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "LOAD MYSQL SERVERS TO RUNTIME;SAVE MYSQL SERVERS TO DISK;" &>> /var/log/run.log
 
