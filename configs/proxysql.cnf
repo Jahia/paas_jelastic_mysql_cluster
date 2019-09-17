@@ -25,4 +25,5 @@ mysql_variables=
     commands_stats=true
     sessions_sort=true
     max_allowed_packet=1073741824
+    monitor_writer_is_also_reader=false
 }

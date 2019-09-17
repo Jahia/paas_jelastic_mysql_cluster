@@ -84,11 +84,9 @@ onInstall:
           id: "${nodes.sqldb.master.id}"
 
       - forEach(k:nodes.sqldb):
-        - addSlave:
-            id: "${@k.id}"
-        #- if (!${@l.ismaster}):
-        #    setSlaveInReadOnly:
-        #      id: "${@k.id}"
+        - if ('${nodes.sqldb.master.id}' != '${@k.id}'):
+          - addSlave:
+              id: "${@k.id}"
 
   - if ('${globals.SCHEME}'.toLowerCase() != 'master'):
       forEach(l:nodes.sqldb):
