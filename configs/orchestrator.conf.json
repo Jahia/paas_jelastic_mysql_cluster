@@ -96,11 +96,11 @@
     "RecoveryIgnoreHostnameFilters": [],
     "RecoverMasterClusterFilters": ["_master_pattern_"],
     "RecoverIntermediateMasterClusterFilters": ["_intermediate_master_pattern_"],
-    "OnFailureDetectionProcesses": ["echo 'Detected {failureType} on {failureCluster}. Affected replicas: {countSlaves}' >> /tmp/recovery.log && /root/prefailover.sh >> /tmp/recovery.log 2>&1 && /root/postfailover.sh >> /tmp/recovery.log 2>&1"],
-    "PreFailoverProcesses": ["echo 'Will recover from {failureType} on {failureCluster}' >> /tmp/recovery.log"],
-    "PostFailoverProcesses": ["echo '(for all types) Recovered from {failureType} on {failureCluster}. Failed: {failedHost}:{failedPort}; Successor: {successorHost}:{successorPort}' >> /tmp/recovery.log"],
-    "PostUnsuccessfulFailoverProcesses": [],
-    "PostIntermediateMasterFailoverProcesses": ["echo 'Recovered from {failureType} on {failureCluster}. Failed: {failedHost}:{failedPort}; Successor: {successorHost}:{successorPort}' >> /tmp/recovery.log"],
+    "OnFailureDetectionProcesses": ["/root/failover.sh >> /tmp/recovery.log 2>&1"],
+    "PreFailoverProcesses": ["/root/failover.sh >> /tmp/recovery.log 2>&1"],
+    "PostFailoverProcesses": ["/root/failover.sh >> /tmp/recovery.log 2>&1"],
+    "PostUnsuccessfulFailoverProcesses": ["/root/failover.sh >> /tmp/recovery.log 2>&1"],
+    "PostIntermediateMasterFailoverProcesses": ["/root/failover.sh >> /tmp/recovery.log 2>&1"],
     "CoMasterRecoveryMustPromoteOtherCoMaster": true,
     "DetachLostSlavesAfterMasterFailover": true,
     "ApplyMySQLPromotionAfterMasterFailover": false,
@@ -112,11 +112,6 @@
     "GraphitePath": "",
     "GraphiteConvertHostnameDotsToUnderscores": true,
     "ApplyMySQLPromotionAfterMasterFailover": true,
-    "PreGracefulTakeoverProcesses": [
-      "echo preGrace >> /tmp/recovery.log && /root/prefailover.sh  >> /tmp/recovery.log 2>&1"
-    ],
-    "PostMasterFailoverProcesses": [
-      "echo postMasterFail >> /tmp/recovery.log && /root/postfailover.sh  >> /tmp/recovery.log 2>&1"
-    ]
-
+    "PreGracefulTakeoverProcesses": ["/root/failover.sh >> /tmp/recovery.log 2>&1"],
+    "PostMasterFailoverProcesses": ["/root/failover.sh >> /tmp/recovery.log 2>&1"]
 }

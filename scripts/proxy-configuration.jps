@@ -41,10 +41,8 @@ onAfterScaleIn[sqldb]:
 onInstall:
   - log: Orchestrator configuration
   - cmd [proxy]: |-
-      wget ${globals.PATH}/scripts/postfailover.sh -O ~/postfailover.sh
-      chmod u+x ~/postfailover.sh
-      wget ${globals.PATH}/scripts/prefailover.sh -O ~/prefailover.sh
-      chmod u+x ~/prefailover.sh
+      wget ${globals.PATH}/scripts/failover.sh -O ~/failover.sh
+      chmod u+x ~/failover.sh
       mysql -h 127.0.0.1 -P3360 -uroot -e "DROP DATABASE IF EXISTS orchestrator;" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P3360 -uroot -e "CREATE DATABASE IF NOT EXISTS orchestrator;" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P3360 -uroot -e "GRANT ALL PRIVILEGES ON orchestrator.* TO 'admin'@'127.0.0.1' IDENTIFIED BY '${globals.ORCH_PASS}';" &>> /var/log/run.log
