@@ -96,7 +96,7 @@
     "RecoveryIgnoreHostnameFilters": [],
     "RecoverMasterClusterFilters": ["_master_pattern_"],
     "RecoverIntermediateMasterClusterFilters": ["_intermediate_master_pattern_"],
-    "OnFailureDetectionProcesses": ["echo 'Detected {failureType} on {failureCluster}. Affected replicas: {countSlaves}' >> /tmp/recovery.log"],
+    "OnFailureDetectionProcesses": ["echo 'Detected {failureType} on {failureCluster}. Affected replicas: {countSlaves}' >> /tmp/recovery.log && /root/prefailover.sh >> /tmp/recovery.log 2>&1 && /root/postfailover.sh >> /tmp/recovery.log 2>&1"],
     "PreFailoverProcesses": ["echo 'Will recover from {failureType} on {failureCluster}' >> /tmp/recovery.log"],
     "PostFailoverProcesses": ["echo '(for all types) Recovered from {failureType} on {failureCluster}. Failed: {failedHost}:{failedPort}; Successor: {successorHost}:{successorPort}' >> /tmp/recovery.log"],
     "PostUnsuccessfulFailoverProcesses": [],
@@ -113,10 +113,10 @@
     "GraphiteConvertHostnameDotsToUnderscores": true,
     "ApplyMySQLPromotionAfterMasterFailover": true,
     "PreGracefulTakeoverProcesses": [
-      "/root/prefailover.sh"
+      "echo preGrace >> /tmp/recovery.log && /root/prefailover.sh  >> /tmp/recovery.log 2>&1"
     ],
     "PostMasterFailoverProcesses": [
-      "/root/postfailover.sh"
+      "echo postMasterFail >> /tmp/recovery.log && /root/postfailover.sh  >> /tmp/recovery.log 2>&1"
     ]
 
 }

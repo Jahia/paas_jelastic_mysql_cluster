@@ -21,8 +21,6 @@ onInstall:
 
   - if (nodes.proxysql):
     - cmd[${nodes.proxysql.master.id}]: wget ${globals.PATH}/scripts/checkCluster.sh -O ~/checkCluster.sh
-    - cmd[${nodes.proxysql.master.id}]: wget ${globals.PATH}/scripts/postfailover.sh -O ~/postfailover.sh
-    - cmd[${nodes.proxysql.master.id}]: wget ${globals.PATH}/scripts/prefailover.sh -O ~/prefailover.sh
     - forEach(i:nodes.sqldb):
         cmd[${nodes.proxysql.master.id}]: bash ~/checkCluster.sh node${@i.id} ${globals.DB_USER} ${globals.DB_PASS} PROXY
 
