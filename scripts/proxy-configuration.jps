@@ -66,6 +66,9 @@ onInstall:
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "UPDATE global_variables SET variable_value='${globals.MONITOR_USER}' WHERE variable_name='mysql-monitor_username';" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "UPDATE global_variables SET variable_value='${globals.MONITOR_PASS}' WHERE variable_name='mysql-monitor_password';" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "UPDATE global_variables SET variable_value='${nodes.sqldb.version}' WHERE variable_name='mysql-server_version';" &>> /var/log/run.log
+      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "UPDATE global_variables SET variable_value=1073741824 WHERE variable_name='mysql-max_allowed_packet';" &>> /var/log/run.log
+      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "UPDATE global_variables SET variable_value='false' WHERE variable_name='mysql-monitor_writer_is_also_reader';" &>> /var/log/run.log
+
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "LOAD MYSQL VARIABLES TO RUNTIME; SAVE MYSQL VARIABLES TO DISK;" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "LOAD MYSQL SERVERS TO RUNTIME; SAVE MYSQL SERVERS TO DISK;" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "LOAD MYSQL USERS TO RUNTIME; SAVE MYSQL USERS TO DISK;" &>> /var/log/run.log
