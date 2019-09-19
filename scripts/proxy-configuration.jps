@@ -45,6 +45,8 @@ onInstall:
       chmod 700 ~/orchestrator-failover.sh
       wget ${globals.PATH}/scripts/proxysql-failover.sh -O ~/proxysql-failover.sh
       chmod 700 ~/proxysql-failover.sh
+      wget ${globals.PATH}/scripts/node-recovery.sh -O ~/node-recovery.sh
+      chmod 700 ~/node-recovery.sh
       mysql -h 127.0.0.1 -P3360 -uroot -e "DROP DATABASE IF EXISTS orchestrator;" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P3360 -uroot -e "CREATE DATABASE IF NOT EXISTS orchestrator;" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P3360 -uroot -e "GRANT ALL PRIVILEGES ON orchestrator.* TO 'admin'@'127.0.0.1' IDENTIFIED BY '${globals.ORCH_PASS}';" &>> /var/log/run.log
