@@ -60,6 +60,11 @@ onInstall:
           - setupMaster:
               id: "${nodes.sqldb.first.id}"
 
+    - log: "Restart mysql to apply configuration before replication setup"
+    - cmd[sqldb]: |-
+        /etc/init.d/mysql restart
+      use: root
+
     - if ('${nodes.sqldb.master.id}' == '${nodes.sqldb.first.id}'):
         - setupReplication:
             id: "${nodes.sqldb.master.id}"
@@ -93,7 +98,6 @@ onInstall:
           addSlave:
             id: "${@i.id}"
             masterId: "${nodes.sqldb.master.id}"
-
 
   - return:
       result: success
