@@ -39,14 +39,18 @@ onAfterScaleIn[sqldb]:
 
 
 onInstall:
+  - log: Fetch db nodes management  scripts
+  - cmd [proxy]: |-
+      wget ${globals.PATH}/scripts/orchestrator-failover.sh -q -O ~/orchestrator-failover.sh
+      chmod 700 ~/orchestrator-failover.sh
+      wget ${globals.PATH}/scripts/proxysql-failover.sh -q -O ~/proxysql-failover.sh
+      chmod 700 ~/proxysql-failover.sh
+      wget ${globals.PATH}/scripts/node-recovery.sh -q -O ~/node-recovery.sh
+      chmod 700 ~/node-recovery.sh
+    user: root
+
   - log: Orchestrator configuration
   - cmd [proxy]: |-
-      wget ${globals.PATH}/scripts/orchestrator-failover.sh -O ~/orchestrator-failover.sh
-      chmod 700 ~/orchestrator-failover.sh
-      wget ${globals.PATH}/scripts/proxysql-failover.sh -O ~/proxysql-failover.sh
-      chmod 700 ~/proxysql-failover.sh
-      wget ${globals.PATH}/scripts/node-recovery.sh -O ~/node-recovery.sh
-      chmod 700 ~/node-recovery.sh
       mysql -h 127.0.0.1 -P3360 -uroot -e "DROP DATABASE IF EXISTS orchestrator;" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P3360 -uroot -e "CREATE DATABASE IF NOT EXISTS orchestrator;" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P3360 -uroot -e "GRANT ALL PRIVILEGES ON orchestrator.* TO 'admin'@'127.0.0.1' IDENTIFIED BY '${globals.ORCH_PASS}';" &>> /var/log/run.log
@@ -84,25 +88,16 @@ onInstall:
       addMonitorUser:
         filter: "${@i.id}"
 
-  - if ('${globals.SCHEME}'.toLowerCase() == 'master'):
-      - setGlobals:
-          MAX_REPL_LAG: 0
+  - setGlobals:
+      MAX_REPL_LAG: 0
 
-      - addMaster:
-          id: "${nodes.sqldb.master.id}"
+  - addMaster:
+      id: "${nodes.sqldb.master.id}"
 
-      - forEach(k:nodes.sqldb):
-        - if ('${nodes.sqldb.master.id}' != '${@k.id}'):
-            - addSlave:
-                id: "${@k.id}"
-
-  - if ('${globals.SCHEME}'.toLowerCase() != 'master'):
-      forEach(l:nodes.sqldb):
-        - if (${@l.ismaster}):
-            - addMaster:
-                id: "${@l.id}"
+  - forEach(k:nodes.sqldb):
+    - if ('${nodes.sqldb.master.id}' != '${@k.id}'):
         - addSlave:
-            id: "${@l.id}"
+            id: "${@k.id}"
 
 actions:
   addMonitorUser:
