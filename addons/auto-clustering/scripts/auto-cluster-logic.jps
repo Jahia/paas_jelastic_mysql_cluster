@@ -3,7 +3,7 @@ id: mysql-auto-cluster-logic
 name: Database Cluster
 skipNodeEmails: true
 globals:
-  baseUrl: "${settings.path}"
+  base_url: "${settings.path}"
   scripts: "${settings.path}/scripts"
 nodeGroupAlias:
   "${targetNodes.nodeGroup}": sqldb
@@ -59,7 +59,7 @@ actions:
         db_user: "${settings.db_user}"
         db_pass: "${settings.db_pass}"
         scheme: "${settings.scheme}"
-        path: "${globals.baseUrl}"
+        path: "${globals.base_url}"
 
   addProxyNodes:
     - addNodes:
@@ -101,7 +101,7 @@ actions:
               db_user: "${settings.db_user}"
               db_pass: "${settings.db_pass}"
               scheme: "${settings.scheme}"
-              path: "${globals.baseUrl}"
+              path: "${globals.base_url}"
 
         - if ('${settings.is_proxysql}' == 'true'):
           - install:
@@ -110,7 +110,7 @@ actions:
                 db_user: "${settings.db_user}"
                 db_pass: "${settings.db_pass}"
                 scheme: "PROXY"
-                path: "${globals.baseUrl}"
+                path: "${globals.base_url}"
           - install-jps:
               jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
 
@@ -127,7 +127,7 @@ actions:
                 db_user: "${settings.db_user}"
                 db_pass: "${settings.db_pass}"
                 scheme: "${settings.scheme}"
-                path: "${globals.baseUrl}"
+                path: "${globals.base_url}"
           - if ('${settings.is_proxysql}' == 'true'):
             - install:
                 jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
@@ -135,7 +135,7 @@ actions:
                   db_user: "${settings.db_user}"
                   db_pass: "${settings.db_pass}"
                   scheme: "PROXY"
-                  path: "${globals.baseUrl}"
+                  path: "${globals.base_url}"
             - install-jps:
                 jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
 
@@ -148,7 +148,7 @@ actions:
                 db_user: "${settings.db_user}"
                 db_pass: "${settings.db_pass}"
                 scheme: "${settings.scheme}"
-                path: "${globals.baseUrl}"
+                path: "${globals.base_url}"
 
           - if ('${settings.is_proxysql}' == 'true'):
             - install:
@@ -157,7 +157,7 @@ actions:
                   db_user: "${settings.db_user}"
                   db_pass: "${settings.db_pass}"
                   scheme: "PROXY"
-                  path: "${globals.baseUrl}"
+                  path: "${globals.base_url}"
 
             - install-jps:
                 jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
@@ -171,7 +171,7 @@ actions:
                 db_user: "${settings.db_user}"
                 db_pass: "${settings.db_pass}"
                 scheme: "${settings.scheme}"
-                path: "${globals.baseUrl}"
+                path: "${globals.base_url}"
 
           - if ('${settings.is_proxysql}' == 'true'):
             - install:
@@ -180,7 +180,7 @@ actions:
                   db_user: "${settings.db_user}"
                   db_pass: "${settings.db_pass}"
                   scheme: "PROXY"
-                  path: "${globals.baseUrl}"
+                  path: "${globals.base_url}"
 
             - install-jps:
                 jps: "${globals.scripts}/proxy-mgr-configuration.jps?_r=${fn.random}"
@@ -194,7 +194,7 @@ actions:
                 db_user: "${settings.db_user}"
                 db_pass: "${settings.db_pass}"
                 scheme: "${settings.scheme}"
-                path: "${globals.baseUrl}"
+                path: "${globals.base_url}"
 
           - if ('${settings.is_proxysql}' == 'true'):
             - install:
@@ -203,7 +203,7 @@ actions:
                   db_user: "${settings.db_user}"
                   db_pass: "${settings.db_pass}"
                   scheme: "PROXY"
-                  path: "${globals.baseUrl}"
+                  path: "${globals.base_url}"
 
             - install-jps:
                 jps: "${globals.scripts}/proxy-mgr-configuration.jps?_r=${fn.random}"
@@ -218,7 +218,7 @@ actions:
                 db_user: "${settings.db_user}"
                 db_pass: "${settings.db_pass}"
                 scheme: "${settings.scheme}"
-                path: "${globals.baseUrl}"
+                path: "${globals.base_url}"
 
           - if ('${settings.is_proxysql}' == 'true'):
             - install:
@@ -227,7 +227,7 @@ actions:
                   db_user: "${settings.db_user}"
                   db_pass: "${settings.db_pass}"
                   scheme: "PROXY"
-                  path: "${globals.baseUrl}"
+                  path: "${globals.base_url}"
 
             - install-jps:
                 jps: "${globals.scripts}/proxy-galera-configuration.jps?_r=${fn.random}"
@@ -241,7 +241,7 @@ actions:
                 db_user: "${settings.db_user}"
                 db_pass: "${settings.db_pass}"
                 scheme: "${settings.scheme}"
-                path: "${globals.baseUrl}"
+                path: "${globals.base_url}"
           - if ('${settings.is_proxysql}' == 'true'):
             - install:
                 jps: "${globals.scripts}/checkCluster.jps?_r=${fn.random}"
@@ -249,7 +249,7 @@ actions:
                   db_user: "${settings.db_user}"
                   db_pass: "${settings.db_pass}"
                   scheme: "PROXY"
-                  path: "${globals.baseUrl}"
+                  path: "${globals.base_url}"
 
             - install-jps:
                 jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
