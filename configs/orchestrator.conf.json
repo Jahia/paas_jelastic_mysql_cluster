@@ -96,11 +96,11 @@
     "RecoveryIgnoreHostnameFilters": [],
     "RecoverMasterClusterFilters": ["_master_pattern_"],
     "RecoverIntermediateMasterClusterFilters": ["_intermediate_master_pattern_"],
-    "OnFailureDetectionProcesses": ["/root/orchestrator-failover.sh >> /tmp/recovery.log 2>&1"],
-    "PreFailoverProcesses": ["/root/orchestrator-failover.sh >> /tmp/recovery.log 2>&1"],
-    "PostFailoverProcesses": ["/root/orchestrator-failover.sh >> /tmp/recovery.log 2>&1"],
-    "PostUnsuccessfulFailoverProcesses": ["/root/orchestrator-failover.sh >> /tmp/recovery.log 2>&1"],
-    "PostIntermediateMasterFailoverProcesses": ["/root/orchestrator-failover.sh >> /tmp/recovery.log 2>&1"],
+    "OnFailureDetectionProcesses": ["/root/orchestrator-failover.sh"],
+    "PreFailoverProcesses": ["/root/orchestrator-failover.sh"],
+    "PostFailoverProcesses": ["/root/orchestrator-failover.sh"],
+    "PostUnsuccessfulFailoverProcesses": ["/root/orchestrator-failover.sh"],
+    "PostIntermediateMasterFailoverProcesses": ["/root/orchestrator-failover.sh"],
     "CoMasterRecoveryMustPromoteOtherCoMaster": true,
     "DetachLostSlavesAfterMasterFailover": true,
     "ApplyMySQLPromotionAfterMasterFailover": false,
@@ -112,6 +112,6 @@
     "GraphitePath": "",
     "GraphiteConvertHostnameDotsToUnderscores": true,
     "ApplyMySQLPromotionAfterMasterFailover": true,
-    "PreGracefulTakeoverProcesses": ["/root/orchestrator-failover.sh >> /tmp/recovery.log 2>&1"],
-    "PostMasterFailoverProcesses": ["/root/orchestrator-failover.sh >> /tmp/recovery.log 2>&1"]
+    "PreGracefulTakeoverProcesses": ["/root/orchestrator-failover.sh"],
+    "PostMasterFailoverProcesses": ["/root/orchestrator-failover.sh"]
 }

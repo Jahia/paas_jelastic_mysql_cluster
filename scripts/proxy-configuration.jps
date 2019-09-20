@@ -69,8 +69,7 @@ onInstall:
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_replication_hostgroups VALUES (10,11,'Group setup');" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_users (username, password, active, default_hostgroup, max_connections)
         VALUES ('${globals.DB_USER}', '${globals.DB_PASS}', 1, 10, 1000);" &>> /var/log/run.log
-      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_query_rules (active, match_pattern, destination_hostgroup, apply) VALUES (1, '^SELECT.*', 10, 1);" &>> /var/log/run.log
-      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_query_rules (active, match_pattern, destination_hostgroup, apply) VALUES (1, '^SELECT.*FOR UPDATE', 10, 1);" &>> /var/log/run.log
+      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO mysql_query_rules (active, match_pattern, destination_hostgroup, apply) VALUES (1, '.*', 10, 1);" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "UPDATE global_variables SET variable_value='${globals.MONITOR_USER}' WHERE variable_name='mysql-monitor_username';" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "UPDATE global_variables SET variable_value='${globals.MONITOR_PASS}' WHERE variable_name='mysql-monitor_password';" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "UPDATE global_variables SET variable_value='${nodes.sqldb.version}' WHERE variable_name='mysql-server_version';" &>> /var/log/run.log
