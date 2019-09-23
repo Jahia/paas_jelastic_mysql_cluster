@@ -54,13 +54,14 @@ actions:
   setupCluster:
     - install-jps:
         jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
-    - install:
-        jps: "${globals.scripts}/checkCluster.jps?_r=${fn.random}"
-        settings:
-          db_user: "${settings.db_user}"
-          db_pass: "${settings.db_pass}"
-          scheme: "${settings.scheme}"
-          path: "${globals.base_url}"
+    - if (nodes.sqldb.length > 1):
+      - install:
+          jps: "${globals.scripts}/checkCluster.jps?_r=${fn.random}"
+          settings:
+            db_user: "${settings.db_user}"
+            db_pass: "${settings.db_pass}"
+            scheme: "${settings.scheme}"
+            path: "${globals.base_url}"
 
     - if ('${settings.is_proxysql}' == 'true'):
       - install:
