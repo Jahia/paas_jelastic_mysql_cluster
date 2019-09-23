@@ -80,7 +80,7 @@ onInstall:
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "LOAD MYSQL SERVERS TO RUNTIME; SAVE MYSQL SERVERS TO DISK;" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "LOAD MYSQL USERS TO RUNTIME; SAVE MYSQL USERS TO DISK;" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "LOAD MYSQL QUERY RULES TO RUNTIME; SAVE MYSQL QUERY RULES TO DISK;" &>> /var/log/run.log
-      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO scheduler (interval_ms, filename)    VALUES (5000, '/root/proxysql-failover.sh');" &>> /var/log/run.log
+      mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "INSERT INTO scheduler (interval_ms, filename) VALUES (2500, '/root/proxysql-failover.sh');" &>> /var/log/run.log
       mysql -h 127.0.0.1 -P6032 -uadmin -padmin -e "LOAD SCHEDULER TO RUNTIME; SAVE SCHEDULER TO DISK;" &>> /var/log/run.log
 
   - forEach(nodes.sqldb):
