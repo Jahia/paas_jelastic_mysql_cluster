@@ -6,13 +6,13 @@ categories:
   - apps/clustered-dbs
   - apps/popular
   - apps/clusters
-  
-description: 
+
+description:
   text: "/texts/description.md?_r=1"
   short: A set of MySQL/MariaDB cluster topologies
-  
+
 logo: /images/icon.png?_r=1
-baseUrl: https://raw.githubusercontent.com/jahia/paas_jelastic_mysql_cluster/PAAS-318-mariabd-cluster
+baseUrl: https://raw.githubusercontent.com/jahia/paas_jelastic_mysql_cluster/master
 
 settings:
   fields:
@@ -21,17 +21,17 @@ settings:
       name: stack
       default: mysql
       required: true
-      values:        
+      values:
         - value: mysql
           caption: MySQL CE
         - value: mariadb-dockerized
           caption: MariaDB
-      
+
     - caption: Topology
       type: list
       name: scheme
-      required: true      
-      dependsOn:                 
+      required: true
+      dependsOn:
         stack:
             mysql:
               - value: slave
@@ -41,9 +41,9 @@ settings:
               - value: single
                 caption: Single Group Replication
               - value: multi
-                caption: Multi Group Replication              
+                caption: Multi Group Replication
 
-            mariadb-dockerized:    
+            mariadb-dockerized:
               - value: slave
                 caption: Master-Slave with extra slaves
               - value: master
@@ -60,28 +60,28 @@ settings:
       inputType: hidden
       type: list
       name: nodeType
-      dependsOn:                 
+      dependsOn:
         stack:
             mysql:
               - value: mysql
-            mariadb-dockerized:    
+            mariadb-dockerized:
               - value: mariadb-dockerized
 
     - caption: None
       inputType: hidden
       type: list
       name: nodes
-      dependsOn:                 
+      dependsOn:
         scheme:
             slave:
               - value: 2
-            master:    
+            master:
               - value: 2
             single:
               - value: 3
-            multi:    
+            multi:
               - value: 3
-            galera:    
+            galera:
               - value: 3
 
 nodes:

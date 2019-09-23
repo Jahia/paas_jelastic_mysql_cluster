@@ -13,7 +13,7 @@ description:
   short: A set of MySQL/MariaDB cluster topologies
 
 logo: /images/icon.png?_r=1
-baseUrl: https://raw.githubusercontent.com/jahia/paas_jelastic_mysql_cluster/PAAS-318-mariabd-cluster
+baseUrl: https://raw.githubusercontent.com/jahia/paas_jelastic_mysql_cluster/master
 
 settings:
   fields:
@@ -104,7 +104,7 @@ nodes:
   tag: "${settings.tag}"
   cluster:
     scheme: "${settings.scheme}"
-    jps: "https://raw.githubusercontent.com/jahia/paas_jelastic_mysql_cluster/PAAS-318-mariabd-cluster/addons/auto-clustering/auto-cluster.jps"
+    jps: "https://raw.githubusercontent.com/jahia/paas_jelastic_mysql_cluster/master/addons/auto-clustering/auto-cluster.jps"
   cloudlets: 8
   env:
     ON_ENV_INSTALL: "${baseUrl}/addons/auto-clustering/auto-cluster.jps"
