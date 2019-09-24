@@ -1,0 +1,26 @@
+jpsType: update
+name: Check Database Cluster
+description: Check Database Cluster
+
+globals:
+  PATH: "${settings.path}"
+  DB_USER: "${settings.db_user}"
+  DB_PASS: "${settings.db_pass}"
+  SCHEME: "${settings.scheme}"
+
+onInstall:
+  - cmd[sqldb]: wget ${globals.PATH}/scripts/checkCluster.sh -O ~/checkCluster.sh
+
+  - if ('${globals.SCHEME}' == 'slave'):
+    - forEach(i:nodes.sqldb):
+      - if (!${@i.ismaster}):
+          cmd[${@i.id}]: bash ~/checkCluster.sh localhost ${globals.DB_USER} ${globals.DB_PASS} ${globals.SCHEME}
+
+  - if ('${globals.SCHEME}' != 'slave'):
+      cmd[${nodes.sqldb.master.id}]: bash ~/checkCluster.sh localhost ${globals.DB_USER} ${globals.DB_PASS} ${globals.SCHEME}
+
+  - if (nodes.proxysql):
+    - cmd[${nodes.proxysql.master.id}]: wget ${globals.PATH}/scripts/checkCluster.sh -O ~/checkCluster.sh
+    - forEach(i:nodes.sqldb):
+        cmd[${nodes.proxysql.master.id}]: bash ~/checkCluster.sh node${@i.id} ${globals.DB_USER} ${globals.DB_PASS} PROXY
+

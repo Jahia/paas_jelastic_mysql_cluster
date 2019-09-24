@@ -1,5 +1,6 @@
 [mysqld]
 server-id = 1
+report-host=nodeXXX
 log-bin = mysql-bin
 log-slave-updates
 replicate-wild-ignore-table = performance_schema.%

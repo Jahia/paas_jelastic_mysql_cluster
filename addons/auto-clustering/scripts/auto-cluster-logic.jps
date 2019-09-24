@@ -3,13 +3,13 @@ id: mysql-auto-cluster-logic
 name: Database Cluster
 skipNodeEmails: true
 globals:
-  baseUrl: "${settings.path}"
+  base_url: "${settings.path}"
   scripts: "${settings.path}/scripts"
 nodeGroupAlias:
   "${targetNodes.nodeGroup}": sqldb
 
 onBeforeResetNodePassword[sqldb]:
-  - cmd[${events.response.nodeid}]: 
+  - cmd[${events.response.nodeid}]:
       sed -i "s/^\!includedir/#\!includedir/g" /etc/my.cnf
     user: root
 
@@ -22,7 +22,6 @@ onAfterResetNodePassword[sqldb]:
 onInstall:
 
   if (nodes.proxy):
-    - cleanCluster
     - setupCluster
   if (!nodes.proxy):
     if (nodes.sqldb.length > 1): setupCluster
@@ -42,16 +41,6 @@ onAfterScaleOut[sqldb]:
   if (!nodes.proxy): setupCluster
 
 actions:
-
-  cleanCluster:
-    forEach(a:nodes.sqldb):
-      if (${@a.ismaster}):
-        forEach(i:nodes.sqldb):
-          if (!${@i.ismaster}):
-            cmd[${@i.id}]: |-
-              mysql -u${settings.db_user} -p${settings.db_pass} -e "STOP SLAVE; RESET SLAVE"
-              mysqlreplicate --master=${settings.db_user}:${settings.db_pass}@node${@a.id}:3306 --slave=${settings.db_user}:${settings.db_pass}@${@i.intIP}:3306 --rpl-user=${settings.repl_user}:${settings.repl_pass}
-  
   install-jps:
     install:
       jps: "${this.jps}"
@@ -60,89 +49,27 @@ actions:
         db_user: "${settings.db_user}"
         db_pass: "${settings.db_pass}"
         scheme: "${settings.scheme}"
-        path: "${globals.baseUrl}"
+        path: "${globals.base_url}"
 
-  addProxyNodes:
-    - addNodes:
-        cloudlets: 8
-        displayName: ProxySQL
-        nodeType: proxysql
-        nodeGroup: proxy
-        scalingMode: stateless
-      nodeGroupData:
-        validation :
-          minCount: 2
-          maxCount: 2
-
-    - addNodes:
-        cloudlets: 8
-        displayName: ProxySQL
-        nodeType: proxysql
-        nodeGroup: proxy
-        scalingMode: stateless
-      nodeGroupData:
-        validation :
-          minCount: 2
-          maxCount: 2
-          
-    - api: env.control.SetNodeGroupDisplayName
-      nodeGroup: proxy
-      displayName: DB Load Balancer
-
-    
   setupCluster:
-    - if (!nodes.proxy && '${settings.is_proxysql}' == 'true'): addProxyNodes
+    - install-jps:
+        jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
+    - if (nodes.sqldb.length > 1):
+      - install:
+          jps: "${globals.scripts}/checkCluster.jps?_r=${fn.random}"
+          settings:
+            db_user: "${settings.db_user}"
+            db_pass: "${settings.db_pass}"
+            scheme: "${settings.scheme}"
+            path: "${globals.base_url}"
 
-    - if (nodes.sqldb.length == 2):
-        - install-jps:
-            jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
-        - if ('${settings.is_proxysql}' == 'true'):    
-          - install-jps:
-              jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
-    
-    - if (nodes.sqldb.length > 2):
-      - if (/mysql/.test("${nodes.sqldb.nodeType}")):
-
-        - if ('${settings.scheme}'.toLowerCase() == 'master'):
-          - install-jps:
-              jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
-          - if ('${settings.is_proxysql}' == 'true'):    
-            - install-jps:
-                jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
-        
-        - if ('${settings.scheme}'.toLowerCase() == 'slave'):
-          - install-jps:
-              jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
-          - if ('${settings.is_proxysql}' == 'true'):    
-            - install-jps:
-                jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
-
-        - if ('${settings.scheme}'.toLowerCase() == 'single'):
-          - install-jps:
-              jps: "${globals.scripts}/mgr-configuration.jps?_r=${fn.random}"
-          - if ('${settings.is_proxysql}' == 'true'):    
-            - install-jps:
-                jps: "${globals.scripts}/proxy-mgr-configuration.jps?_r=${fn.random}"
-
-        - if ('${settings.scheme}'.toLowerCase() == 'multi'):
-          - install-jps:
-              jps: "${globals.scripts}/mgr-configuration.jps?_r=${fn.random}"
-          - if ('${settings.is_proxysql}' == 'true'):    
-            - install-jps:
-                jps: "${globals.scripts}/proxy-mgr-configuration.jps?_r=${fn.random}"
-
-      - if (/mariadb/.test("${nodes.sqldb.nodeType}")):
-        - if ('${settings.scheme}'.toLowerCase() == 'galera'):  
-          - install-jps:
-              jps: "${globals.scripts}/galera-configuration.jps?_r=${fn.random}"
-          - if ('${settings.is_proxysql}' == 'true'):    
-            - install-jps:
-                jps: "${globals.scripts}/proxy-galera-configuration.jps?_r=${fn.random}"
-      
-        - if ('${settings.scheme}'.toLowerCase() != 'galera'):  
-          - install-jps:
-              jps: "${globals.scripts}/ms-mm-configuration.jps?_r=${fn.random}"
-          - if ('${settings.is_proxysql}' == 'true'):    
-            - install-jps:
-                jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
-  
+    - if ('${settings.is_proxysql}' == 'true'):
+      - install:
+          jps: "${globals.scripts}/checkCluster.jps?_r=${fn.random}"
+          settings:
+            db_user: "${settings.db_user}"
+            db_pass: "${settings.db_pass}"
+            scheme: "PROXY"
+            path: "${globals.base_url}"
+      - install-jps:
+          jps: "${globals.scripts}/proxy-configuration.jps?_r=${fn.random}"
