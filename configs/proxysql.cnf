@@ -12,7 +12,6 @@ mysql_variables=
     threads=2
     max_connections=2048
     default_query_delay=0
-    default_query_timeout=10000
     poll_timeout=2000
     interfaces="0.0.0.0:3306"
     default_schema="information_schema"
