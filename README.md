@@ -1,4 +1,16 @@
-<p align="center"> 
+## Check cluster health
+
+ssh on a proxysql node.
+
+List clusters : /usr/local/orchestrator/orchestrator -c clusters
+Get topology/nodes infos with orchestrator : /usr/local/orchestrator/orchestrator -c topology -i CLUSTER_NAME
+
+Get nodes infos with proxysql : mysql -u admin -pPWD -P6032 -h 127.0.0.1 -e "select * from mysql_servers"
+hostgroup_id :
+ * 10 -> active node
+ * 11 -> passiwve node
+
+<p align="center">
 <img style="padding: 0 15px; float: left;" src="images/logo.png" width="70">
 </p>
 
@@ -6,7 +18,7 @@
 
 MariaDB/MySQL Auto-Clustering solution is packaged as an advanced highly available and auto-scalable cluster on top of managed Jelastic dockerized stack templates.
 
-<p align="left"> 
+<p align="left">
 <img src="images/mysql-maria-scheme.png" width="500">
 </p>
 
