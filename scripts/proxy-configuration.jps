@@ -47,6 +47,8 @@ onInstall:
       chmod 700 ~/proxysql-failover.sh
       wget ${globals.PATH}/scripts/node-recovery.sh -q -O ~/node-recovery.sh
       chmod 700 ~/node-recovery.sh
+      wget ${globals.PATH}/scripts/clone-updates.sh -q -O ~/clone-updates.sh
+      chmod 700 ~/clone-updates.sh
     user: root
 
   - log: Orchestrator configuration
